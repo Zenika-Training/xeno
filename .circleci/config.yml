@@ -23,7 +23,6 @@ workflows:
           use-remote-docker: yes
           remote-docker-dlc: yes
           image: zenika/train_xeno
-          tag: "1.0"
           deploy: no
           filters:
             branches:
@@ -31,7 +30,7 @@ workflows:
       - docker/publish:
           <<: *docker-build-params
           name: build-and-publish-docker-image
-          tag: latest
+          tag: "1.0"
           deploy: yes
           update-description: yes
           docker-username: DOCKERHUB_USERNAME
