@@ -118,6 +118,7 @@ func simulate(a int, s int, m int) (int, int, int) {
 	alien := maxInt(a+minInt(int(infectedByTurn), s)-int(marineKillByTurn*float64(marine)), 0)
 	settler := maxInt(s-int(infectedByTurn*float64(alien)), 0)
 	marine := maxInt(marine-int(alienKillByTurn*float64(alien)), 0)
+	log.Printf("%d 🧑‍🌾 settlers, %d 👽 aliens, %d 👮 marines\n", settler, alien, marine)
 	return alien, settler, marine
 }
 
@@ -141,7 +142,7 @@ func main() {
 			watchedNumber.WithLabelValues("aliens").Set(float64(alien))
 			watchedNumber.WithLabelValues("marines").Set(float64(marine))
 			watchedNumber.WithLabelValues("settlers").Set(float64(settler))
-			time.Sleep(time.Duration(1000) * time.Millisecond)
+			time.Sleep(time.Duration(loopMillisecondTimeout) * time.Millisecond)
 		}
 	}()
 

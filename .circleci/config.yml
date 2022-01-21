@@ -1,0 +1,42 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.0.1
+
+jobs:
+  quality-checks:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - docker/dockerlint
+
+workflows:
+  version: 2.0
+
+  build:
+    jobs:
+      - quality-checks
+      - docker/publish: &docker-build-params
+          name: build-docker-image
+          executor: docker/docker
+          use-remote-docker: yes
+          remote-docker-dlc: yes
+          image: zenika/train_xeno
+          tag: "1.0"
+          deploy: no
+          filters:
+            branches:
+              ignore: master
+      - docker/publish:
+          <<: *docker-build-params
+          name: build-and-publish-docker-image
+          tag: latest
+          deploy: yes
+          update-description: yes
+          docker-username: DOCKERHUB_USERNAME
+          docker-password: DOCKERHUB_PASS
+          filters:
+            branches:
+              only: master
+          context: docker-hub-zenika
